@@ -1,26 +1,26 @@
 
 # CRUD Framework with Plugin Architecture
 
-This project demonstrates a modular Spring Boot application designed with a generic CRUD framework and a specific implementation for managing `Person` entities. It showcases a plugin-based architecture where different data stores can be used for different entity types.
+Proyek ini mendemonstrasikan aplikasi Spring Boot modular yang dirancang dengan kerangka kerja CRUD generik dan implementasi spesifik untuk mengelola entitas `Person`. Ini menampilkan arsitektur berbasis plugin di mana penyimpanan data yang berbeda dapat digunakan untuk jenis entitas yang berbeda.
 
-## Microkernel/Plugin Architecture
+## Arsitektur Microkernel/Plugin
 
-This project is structured around a microkernel (or plugin) architecture, which promotes extensibility and flexibility. The core idea is to keep the central system (the microkernel) small and focused on essential functionalities, while allowing additional features and business logic to be added as independent plugins.
+Proyek ini terstruktur di sekitar arsitektur microkernel (atau plugin), yang mendorong ekstensibilitas dan fleksibilitas. Ide intinya adalah menjaga sistem pusat (microkernel) tetap kecil dan fokus pada fungsionalitas esensial, sambil memungkinkan fitur tambahan dan logika bisnis ditambahkan sebagai plugin independen.
 
-In this architecture:
+Dalam arsitektur ini:
 
-*   **Microkernel (Core System)**: Represented by the `crud-abstraction` and `rest-abstraction` modules, along with the `plugin-host-app`.
-    *   **`crud-abstraction`**: Provides the core contracts (interfaces) for CRUD operations, defining how plugins should interact with the system for data management. It's the abstract foundation.
-    *   **`rest-abstraction`**: Offers a standardized way for plugins to expose RESTful APIs and handle responses, ensuring consistency across all integrated plugins.
-    *   **`plugin-host-app`**: Acts as the main application that loads and orchestrates these plugins. It provides the runtime environment and integrates the functionalities exposed by various plugins.
-*   **Plugins**: Independent modules that extend the functionality of the microkernel.
-    *   **`people-crud-plugin`**: This module serves as a concrete example of a plugin. It implements the `crud-abstraction` interfaces for a specific entity (`Person`) and integrates with a particular data store (MongoDB). This demonstrates how new entity types and their respective data handling can be "plugged in" without modifying the core system.
+*   **Microkernel (Sistem Inti)**: Diwakili oleh modul `crud-abstraction` dan `rest-abstraction`, bersama dengan `plugin-host-app`.
+    *   **`crud-abstraction`**: Menyediakan kontrak inti (interface) untuk operasi CRUD, mendefinisikan bagaimana plugin harus berinteraksi dengan sistem untuk manajemen data. Ini adalah fondasi abstrak.
+    *   **`rest-abstraction`**: Menawarkan cara standar bagi plugin untuk mengekspos RESTful APIs dan menangani respons, memastikan konsistensi di semua plugin yang terintegrasi.
+    *   **`plugin-host-app`**: Bertindak sebagai aplikasi utama yang memuat dan mengatur plugin-plugin ini. Ini menyediakan lingkungan runtime dan mengintegrasikan fungsionalitas yang diekspos oleh berbagai plugin.
+*   **Plugins**: Modul independen yang memperluas fungsionalitas microkernel.
+    *   **`people-crud-plugin`**: Modul ini berfungsi sebagai contoh konkret dari sebuah plugin. Ini mengimplementasikan interface `crud-abstraction` untuk entitas spesifik (`Person`) dan berintegrasi dengan penyimpanan data tertentu (MongoDB). Ini menunjukkan bagaimana jenis entitas baru dan penanganan datanya masing-masing dapat "dipasang" tanpa memodifikasi sistem inti.
 
-This design allows for:
-*   **Modularity**: Features are isolated into distinct plugins, making the system easier to understand, develop, and maintain.
-*   **Extensibility**: New functionalities (e.g., CRUD for other entities like `Product`, `Order`) can be added by simply creating new plugins that adhere to the defined abstractions, without altering the existing core or other plugins.
-*   **Flexibility**: Different plugins can utilize different technologies or data stores (e.g., one plugin uses MongoDB, another could use PostgreSQL) while still conforming to the common CRUD interfaces.
-*   **Scalability**: Individual plugins can potentially be scaled independently if deployed as separate services, although in this example, they are integrated within a single host application.
+Desain ini memungkinkan:
+*   **Modularitas**: Fitur-fitur diisolasi ke dalam plugin yang berbeda, membuat sistem lebih mudah dipahami, dikembangkan, dan dipelihara.
+*   **Ekstensibilitas**: Fungsionalitas baru (misalnya, CRUD untuk entitas lain seperti `Product`, `Order`) dapat ditambahkan hanya dengan membuat plugin baru yang mematuhi abstraksi yang ditentukan, tanpa mengubah inti yang ada atau plugin lainnya.
+*   **Fleksibilitas**: Plugin yang berbeda dapat menggunakan teknologi atau penyimpanan data yang berbeda (misalnya, satu plugin menggunakan MongoDB, yang lain dapat menggunakan PostgreSQL) sambil tetap sesuai dengan interface CRUD umum.
+*   **Skalabilitas**: Plugin individual berpotensi dapat diskalakan secara independen jika diterapkan sebagai layanan terpisah, meskipun dalam contoh ini, mereka diintegrasikan dalam satu aplikasi host.
 
 ## Project Structure
 
@@ -65,15 +65,15 @@ graph TD
     B --> A;
 ```
 
-**Explanation:**
+**Penjelasan:**
 
-1.  A client sends an HTTP request (e.g., `POST /api/people` to create a new person) to the `plugin-host-app`.
-2.  The `plugin-host-app` routes the request to the `PersonController` within the `people-crud-plugin`.
-3.  The `PersonController` delegates the business logic to the `PersonService`.
-4.  The `PersonService` interacts with the `PersonRepository` to perform the necessary database operations.
-5.  The `PersonRepository` communicates with the MongoDB database to store or retrieve `Person` data.
-6.  The data flows back from the database, through the `PersonRepository`, `PersonService`, and `PersonController`.
-7.  Finally, the `PersonController` constructs an HTTP response (potentially using `BaseResponse` from `rest-abstraction`) and sends it back to the client via the `plugin-host-app`.
+1.  Klien mengirimkan permintaan HTTP (misalnya, `POST /api/people` untuk membuat orang baru) ke `plugin-host-app`.
+2.  `plugin-host-app` mengarahkan permintaan ke `PersonController` di dalam `people-crud-plugin`.
+3.  `PersonController` mendelegasikan logika bisnis ke `PersonService`.
+4.  `PersonService` berinteraksi dengan `PersonRepository` untuk melakukan operasi database yang diperlukan.
+5.  `PersonRepository` berkomunikasi dengan database MongoDB untuk menyimpan atau mengambil data `Person`.
+6.  Data mengalir kembali dari database, melalui `PersonRepository`, `PersonService`, dan `PersonController`.
+7.  Akhirnya, `PersonController` membuat respons HTTP (berpotensi menggunakan `BaseResponse` dari `rest-abstraction`) dan mengirimkannya kembali ke klien melalui `plugin-host-app`.
 
 ## Class Diagram
 
