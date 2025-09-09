@@ -83,31 +83,31 @@ classDiagram
 
     class BaseEntity {
         +Long id
-        +getId(): Long
-        +setId(Long id): void
+        +Long getId()
+        +void setId(Long id)
     }
 
     interface CrudRepository~T, ID~ {
-        +save(T entity): T
-        +findById(ID id): Optional~T~
-        +findAll(): List~T~
-        +deleteById(ID id): void
+        +T save(T entity)
+        +Optional~T~ findById(ID id)
+        +List~T~ findAll()
+        +void deleteById(ID id)
     }
 
     interface CrudService~T, ID~ {
-        +save(T entity): T
-        +findById(ID id): Optional~T~
-        +findAll(): List~T~
-        +deleteById(ID id): void
-        +update(ID id, T entity): T
+        +T save(T entity)
+        +Optional~T~ findById(ID id)
+        +List~T~ findAll()
+        +void deleteById(ID id)
+        +T update(ID id, T entity)
     }
 
     interface CrudController~T, ID~ {
-        +create(T entity): ResponseEntity~T~
-        +getById(ID id): ResponseEntity~T~
-        +getAll(): ResponseEntity~List~T~~
-        +update(ID id, T entity): ResponseEntity~T~
-        +delete(ID id): ResponseEntity~Void~
+        +ResponseEntity~T~ create(T entity)
+        +ResponseEntity~T~ getById(ID id)
+        +ResponseEntity~List~T~~ getAll()
+        +ResponseEntity~T~ update(ID id, T entity)
+        +ResponseEntity~Void~ delete(ID id)
     }
 
     class Person {
@@ -125,20 +125,20 @@ classDiagram
 
     class PersonService {
         -PersonRepository repository
-        +save(Person person): Person
-        +findById(Long id): Optional~Person~
-        +findAll(): List~Person~
-        +deleteById(Long id): void
-        +update(Long id, Person person): Person
+        +Person save(Person person)
+        +Optional~Person~ findById(Long id)
+        +List~Person~ findAll()
+        +void deleteById(Long id)
+        +Person update(Long id, Person person)
     }
 
     class PersonController {
         -PersonService personService
-        +createPerson(Person person): ResponseEntity~Person~
-        +getPersonById(Long id): ResponseEntity~Person~
-        +getAllPeople(): ResponseEntity~List~Person~~
-        +updatePerson(Long id, Person person): ResponseEntity~Person~
-        +deletePerson(Long id): ResponseEntity~Void~
+        +ResponseEntity~Person~ createPerson(Person person)
+        +ResponseEntity~Person~ getPersonById(Long id)
+        +ResponseEntity~List~Person~~ getAllPeople()
+        +ResponseEntity~Person~ updatePerson(Long id, Person person)
+        +ResponseEntity~Void~ deletePerson(Long id)
     }
 
     BaseEntity <|-- Person
@@ -146,8 +146,6 @@ classDiagram
     CrudService <|.. PersonService
     CrudController <|.. PersonController
 
-    PersonService --* PersonRepository : uses
-
-```
-    PersonController --* PersonService : uses
+    PersonService --> PersonRepository
+    PersonController --> PersonService
 ```
