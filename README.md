@@ -87,25 +87,25 @@ classDiagram
 
     interface CrudRepository<T, ID> {
         +save(T entity): T
-        +findById(ID id): Optional~T~
-        +findAll(): List~T~
+        +findById(ID id): Optional<T>
+        +findAll(): List<T>
         +deleteById(ID id): void
     }
 
     interface CrudService<T, ID> {
         +save(T entity): T
-        +findById(ID id): Optional~T~
-        +findAll(): List~T~
+        +findById(ID id): Optional<T>
+        +findAll(): List<T>
         +deleteById(ID id): void
         +update(ID id, T entity): T
     }
 
     interface CrudController<T, ID> {
-        +create(T entity): ResponseEntity~BaseResponse~T~~
-        +getById(ID id): ResponseEntity~BaseResponse~T~~
-        +getAll(): ResponseEntity~BaseResponse~List~T~~~
-        +update(ID id, T entity): ResponseEntity~BaseResponse~T~~
-        +delete(ID id): ResponseEntity~BaseResponse~Void~~
+        +create(T entity): ResponseEntity<T>
+        +getById(ID id): ResponseEntity<T>
+        +getAll(): ResponseEntity<List<T>>
+        +update(ID id, T entity): ResponseEntity<T>
+        +delete(ID id): ResponseEntity<Void>
     }
 
     class Person {
@@ -124,19 +124,19 @@ classDiagram
     class PersonService {
         -PersonRepository repository
         +save(Person person): Person
-        +findById(Long id): Optional~Person~
-        +findAll(): List~Person~
+        +findById(Long id): Optional<Person>
+        +findAll(): List<Person>
         +deleteById(Long id): void
         +update(Long id, Person person): Person
     }
 
     class PersonController {
         -PersonService personService
-        +createPerson(Person person): ResponseEntity~Person~
-        +getPersonById(Long id): ResponseEntity~Person~
-        +getAllPeople(): ResponseEntity~List~Person~~
-        +updatePerson(Long id, Person person): ResponseEntity~Person~
-        +deletePerson(Long id): ResponseEntity~Void~
+        +createPerson(Person person): ResponseEntity<Person>
+        +getPersonById(Long id): ResponseEntity<Person>
+        +getAllPeople(): ResponseEntity<List<Person>>
+        +updatePerson(Long id, Person person): ResponseEntity<Person>
+        +deletePerson(Long id): ResponseEntity<Void>
     }
 
     BaseEntity <|-- Person : extends
@@ -146,3 +146,4 @@ classDiagram
 
     PersonService --> PersonRepository : uses
     PersonController --> PersonService : uses
+```
