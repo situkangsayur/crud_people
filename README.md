@@ -2,6 +2,25 @@
 
 This project demonstrates a modular Spring Boot application designed with a generic CRUD framework and a specific implementation for managing `Person` entities. It showcases a plugin-based architecture where different data stores can be used for different entity types.
 
+## Microkernel/Plugin Architecture
+
+This project is structured around a microkernel (or plugin) architecture, which promotes extensibility and flexibility. The core idea is to keep the central system (the microkernel) small and focused on essential functionalities, while allowing additional features and business logic to be added as independent plugins.
+
+In this architecture:
+
+*   **Microkernel (Core System)**: Represented by the `crud-abstraction` and `rest-abstraction` modules, along with the `plugin-host-app`.
+    *   **`crud-abstraction`**: Provides the core contracts (interfaces) for CRUD operations, defining how plugins should interact with the system for data management. It's the abstract foundation.
+    *   **`rest-abstraction`**: Offers a standardized way for plugins to expose RESTful APIs and handle responses, ensuring consistency across all integrated plugins.
+    *   **`plugin-host-app`**: Acts as the main application that loads and orchestrates these plugins. It provides the runtime environment and integrates the functionalities exposed by various plugins.
+*   **Plugins**: Independent modules that extend the functionality of the microkernel.
+    *   **`people-crud-plugin`**: This module serves as a concrete example of a plugin. It implements the `crud-abstraction` interfaces for a specific entity (`Person`) and integrates with a particular data store (MongoDB). This demonstrates how new entity types and their respective data handling can be "plugged in" without modifying the core system.
+
+This design allows for:
+*   **Modularity**: Features are isolated into distinct plugins, making the system easier to understand, develop, and maintain.
+*   **Extensibility**: New functionalities (e.g., CRUD for other entities like `Product`, `Order`) can be added by simply creating new plugins that adhere to the defined abstractions, without altering the existing core or other plugins.
+*   **Flexibility**: Different plugins can utilize different technologies or data stores (e.g., one plugin uses MongoDB, another could use PostgreSQL) while still conforming to the common CRUD interfaces.
+*   **Scalability**: Individual plugins can potentially be scaled independently if deployed as separate services, although in this example, they are integrated within a single host application.
+
 ## Project Structure
 
 The project is organized into several Maven modules:
@@ -62,31 +81,31 @@ classDiagram
     direction LR
     class BaseEntity {
         +Long id
-        +getId()
-        +setId()
+        +getId(): Long
+        +setId(Long id): void
     }
 
     interface CrudRepository<T, ID> {
-        +T save(T entity)
-        +Optional<T> findById(ID id)
-        +List<T> findAll()
-        +void deleteById(ID id)
+        +save(T entity): T
+        +findById(ID id): Optional~T~
+        +findAll(): List~T~
+        +deleteById(ID id): void
     }
 
     interface CrudService<T, ID> {
-        +T save(T entity)
-        +Optional<T> findById(ID id)
-        +List<T> findAll()
-        +void deleteById(ID id)
-        +T update(ID id, T entity)
+        +save(T entity): T
+        +findById(ID id): Optional~T~
+        +findAll(): List~T~
+        +deleteById(ID id): void
+        +update(ID id, T entity): T
     }
 
     interface CrudController<T, ID> {
-        +ResponseEntity<BaseResponse<T>> create(T entity)
-        +ResponseEntity<BaseResponse<T>> getById(ID id)
-        +ResponseEntity<BaseResponse<List<T>>> getAll()
-        +ResponseEntity<BaseResponse<T>> update(ID id, T entity)
-        +ResponseEntity<BaseResponse<Void>> delete(ID id)
+        +create(T entity): ResponseEntity~BaseResponse~T~~
+        +getById(ID id): ResponseEntity~BaseResponse~T~~
+        +getAll(): ResponseEntity~BaseResponse~List~T~~~
+        +update(ID id, T entity): ResponseEntity~BaseResponse~T~~
+        +delete(ID id): ResponseEntity~BaseResponse~Void~~
     }
 
     class Person {
@@ -104,20 +123,20 @@ classDiagram
 
     class PersonService {
         -PersonRepository repository
-        +Person save(Person person)
-        +Optional<Person> findById(Long id)
-        +List<Person> findAll()
-        +void deleteById(Long id)
-        +Person update(Long id, Person person)
+        +save(Person person): Person
+        +findById(Long id): Optional~Person~
+        +findAll(): List~Person~
+        +deleteById(Long id): void
+        +update(Long id, Person person): Person
     }
 
     class PersonController {
         -PersonService personService
-        +ResponseEntity<Person> createPerson(Person person)
-        +ResponseEntity<Person> getPersonById(Long id)
-        +ResponseEntity<List<Person>> getAllPeople()
-        +ResponseEntity<Person> updatePerson(Long id, Person person)
-        +ResponseEntity<Void> deletePerson(Long id)
+        +createPerson(Person person): ResponseEntity~Person~
+        +getPersonById(Long id): ResponseEntity~Person~
+        +getAllPeople(): ResponseEntity~List~Person~~
+        +updatePerson(Long id, Person person): ResponseEntity~Person~
+        +deletePerson(Long id): ResponseEntity~Void~
     }
 
     BaseEntity <|-- Person : extends
