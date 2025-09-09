@@ -147,5 +147,7 @@ classDiagram
     CrudController <|.. PersonController
 
     PersonService --* PersonRepository : uses
+
+```
     PersonController --* PersonService : uses
 ```
