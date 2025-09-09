@@ -1,3 +1,4 @@
+
 # CRUD Framework with Plugin Architecture
 
 This project demonstrates a modular Spring Boot application designed with a generic CRUD framework and a specific implementation for managing `Person` entities. It showcases a plugin-based architecture where different data stores can be used for different entity types.
@@ -79,71 +80,55 @@ graph TD
 ```mermaid
 classDiagram
     direction LR
+
     class BaseEntity {
-        +Long id
-        +getId(): Long
-        +setId(Long id): void
+        id
     }
 
-    interface CrudRepository<T, ID> {
-        +save(T entity): T
-        +findById(ID id): Optional<T>
-        +findAll(): List<T>
-        +deleteById(ID id): void
-    }
-
-    interface CrudService<T, ID> {
-        +save(T entity): T
-        +findById(ID id): Optional<T>
-        +findAll(): List<T>
-        +deleteById(ID id): void
-        +update(ID id, T entity): T
-    }
-
-    interface CrudController<T, ID> {
-        +create(T entity): ResponseEntity<T>
-        +getById(ID id): ResponseEntity<T>
-        +getAll(): ResponseEntity<List<T>>
-        +update(ID id, T entity): ResponseEntity<T>
-        +delete(ID id): ResponseEntity<Void>
-    }
+    interface CrudRepository
+    interface CrudService
+    interface CrudController
 
     class Person {
-        +String nik
-        +String firstName
-        +String lastName
-        +String phoneNumber
-        +String address1
-        +String address2
+        nik
+        firstName
+        lastName
+        phoneNumber
+        address1
+        address2
     }
 
-    class PersonRepository {
-        // Extends MongoRepository<Person, Long>
-    }
-
-    class PersonService {
-        -PersonRepository repository
-        +save(Person person): Person
-        +findById(Long id): Optional<Person>
-        +findAll(): List<Person>
-        +deleteById(Long id): void
-        +update(Long id, Person person): Person
-    }
-
-    class PersonController {
-        -PersonService personService
-        +createPerson(Person person): ResponseEntity<Person>
-        +getPersonById(Long id): ResponseEntity<Person>
-        +getAllPeople(): ResponseEntity<List<Person>>
-        +updatePerson(Long id, Person person): ResponseEntity<Person>
-        +deletePerson(Long id): ResponseEntity<Void>
-    }
+    class PersonRepository
+    class PersonService
+    class PersonController
 
     BaseEntity <|-- Person : extends
-    CrudRepository <|-- PersonRepository : implements
-    CrudService <|-- PersonService : implements
-    CrudController <|-- PersonController : implements
+    CrudRepository <|.. PersonRepository : implements
+    CrudService <|.. PersonService : implements
+    CrudController <|.. PersonController : implements
 
     PersonService --> PersonRepository : uses
     PersonController --> PersonService : uses
+    
+    %% --- Method and Field Descriptions (for clarity) ---
+    note "id: Long\ngetId(): Long\nsetId(Long id): void" as note1
+    BaseEntity .. note1
+    
+    note "save(T entity): T\nfindById(ID id): Optional<T>\nfindAll(): List<T>\ndeleteById(ID id): void" as note2
+    CrudRepository .. note2
+    
+    note "save(T entity): T\nfindById(ID id): Optional<T>\nfindAll(): List<T>\ndeleteById(ID id): void\nupdate(ID id, T entity): T" as note3
+    CrudService .. note3
+    
+    note "create(T entity): ResponseEntity<T>\ngetById(ID id): ResponseEntity<T>\ngetAll(): ResponseEntity<List<T>>\nupdate(ID id, T entity): ResponseEntity<T>\ndelete(ID id): ResponseEntity<Void>" as note4
+    CrudController .. note4
+    
+    note "nik: String\nfirstName: String\nlastName: String\nphoneNumber: String\naddress1: String\naddress2: String" as note5
+    Person .. note5
+    
+    note "-repository: PersonRepository\nsave(Person person): Person\nfindById(Long id): Optional<Person>\nfindAll(): List<Person>\ndeleteById(Long id): void\nupdate(Long id, Person person): Person" as note6
+    PersonService .. note6
+    
+    note "-personService: PersonService\ncreatePerson(Person person): ResponseEntity<Person>\ngetPersonById(Long id): ResponseEntity<Person>\ngetAllPeople(): ResponseEntity<List<Person>>\nupdatePerson(Long id, Person person): ResponseEntity<Person>\ndeletePerson(Long id): ResponseEntity<Void>" as note7
+    PersonController .. note7
 ```
