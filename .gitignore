@@ -1,0 +1,38 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+hs_err_pid*
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+.history/
+
+# IDEs (common for Java development)
+.idea/
+*.iml
+*.iws
+*.ipr
+nbproject/
+*.log
+
+# Operating System
+.DS_Store
+Thumbs.db
