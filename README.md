@@ -80,41 +80,41 @@ graph TD
 classDiagram
     direction LR
     class BaseEntity {
-        id: Long
-        getId(): Long
-        setId(Long id): void
+        +Long id
+        +getId(): Long
+        +setId(Long id): void
     }
 
-    interface CrudRepository~T, ID~ {
-        save(T entity): T
-        findById(ID id): Optional~T~
-        findAll(): List~T~
-        deleteById(ID id): void
+    interface CrudRepository<T, ID> {
+        +save(T entity): T
+        +findById(ID id): Optional<T>
+        +findAll(): List<T>
+        +deleteById(ID id): void
     }
 
-    interface CrudService~T, ID~ {
-        save(T entity): T
-        findById(ID id): Optional~T~
-        findAll(): List~T~
-        deleteById(ID id): void
-        update(ID id, T entity): T
+    interface CrudService<T, ID> {
+        +save(T entity): T
+        +findById(ID id): Optional<T>
+        +findAll(): List<T>
+        +deleteById(ID id): void
+        +update(ID id, T entity): T
     }
 
-    interface CrudController~T, ID~ {
-        create(T entity): ResponseEntity~T~
-        getById(ID id): ResponseEntity~T~
-        getAll(): ResponseEntity~List~T~~
-        update(ID id, T entity): ResponseEntity~T~
-        delete(ID id): ResponseEntity~Void~
+    interface CrudController<T, ID> {
+        +create(T entity): ResponseEntity<T>
+        +getById(ID id): ResponseEntity<T>
+        +getAll(): ResponseEntity<List<T>>
+        +update(ID id, T entity): ResponseEntity<T>
+        +delete(ID id): ResponseEntity<Void>
     }
 
     class Person {
-        nik: String
-        firstName: String
-        lastName: String
-        phoneNumber: String
-        address1: String
-        address2: String
+        +String nik
+        +String firstName
+        +String lastName
+        +String phoneNumber
+        +String address1
+        +String address2
     }
 
     class PersonRepository {
@@ -122,27 +122,27 @@ classDiagram
     }
 
     class PersonService {
-        -repository: PersonRepository
-        save(Person person): Person
-        findById(Long id): Optional~Person~
-        findAll(): List~Person~
-        deleteById(Long id): void
-        update(Long id, Person person): Person
+        -PersonRepository repository
+        +save(Person person): Person
+        +findById(Long id): Optional<Person>
+        +findAll(): List<Person>
+        +deleteById(Long id): void
+        +update(Long id, Person person): Person
     }
 
     class PersonController {
-        -personService: PersonService
-        createPerson(Person person): ResponseEntity~Person~
-        getPersonById(Long id): ResponseEntity~Person~
-        getAllPeople(): ResponseEntity~List~Person~~
-        updatePerson(Long id, Person person): ResponseEntity~Person~
-        deletePerson(Long id): ResponseEntity~Void~
+        -PersonService personService
+        +createPerson(Person person): ResponseEntity<Person>
+        +getPersonById(Long id): ResponseEntity<Person>
+        +getAllPeople(): ResponseEntity<List<Person>>
+        +updatePerson(Long id, Person person): ResponseEntity<Person>
+        +deletePerson(Long id): ResponseEntity<Void>
     }
 
     BaseEntity <|-- Person : extends
-    CrudRepository <|.. PersonRepository : implements
-    CrudService <|.. PersonService : implements
-    CrudController <|.. PersonController : implements
+    CrudRepository <|-- PersonRepository : implements
+    CrudService <|-- PersonService : implements
+    CrudController <|-- PersonController : implements
 
     PersonService --> PersonRepository : uses
     PersonController --> PersonService : uses
