@@ -82,25 +82,52 @@ classDiagram
     direction LR
 
     class BaseEntity {
-        id
+        +id : Long
     }
 
-    interface CrudRepository
-    interface CrudService
-    interface CrudController
+    interface CrudRepository~T, ID~ {
+        +save(T entity) T
+        +findById(ID id) Optional~T~
+        +findAll() List~T~
+        +deleteById(ID id) void
+    }
+
+    interface CrudService~T, ID~ {
+        +save(T entity) T
+        +findById(ID id) Optional~T~
+        +findAll() List~T~
+        +deleteById(ID id) void
+        +update(ID id, T entity) T
+    }
+
+    interface CrudController~T, ID~ {
+        +create(T entity) ResponseEntity~T~
+        +getById(ID id) ResponseEntity~T~
+        +getAll() ResponseEntity~List~T~~
+        +update(ID id, T entity) ResponseEntity~T~
+        +delete(ID id) ResponseEntity~Void~
+    }
 
     class Person {
-        nik
-        firstName
-        lastName
-        phoneNumber
-        address1
-        address2
+        +nik : String
+        +firstName : String
+        +lastName : String
+        +phoneNumber : String
+        +address1 : String
+        +address2 : String
     }
 
-    class PersonRepository
-    class PersonService
-    class PersonController
+    class PersonRepository {
+        -repository : CrudRepository~Person, Long~
+    }
+
+    class PersonService {
+        -repository : PersonRepository
+    }
+
+    class PersonController {
+        -personService : PersonService
+    }
 
     BaseEntity <|-- Person : extends
     CrudRepository <|.. PersonRepository : implements
@@ -109,26 +136,4 @@ classDiagram
 
     PersonService --> PersonRepository : uses
     PersonController --> PersonService : uses
-    
-    %% --- Method and Field Descriptions (for clarity) ---
-    note "id: Long\ngetId(): Long\nsetId(Long id): void" as note1
-    BaseEntity .. note1
-    
-    note "save(T entity): T\nfindById(ID id): Optional<T>\nfindAll(): List<T>\ndeleteById(ID id): void" as note2
-    CrudRepository .. note2
-    
-    note "save(T entity): T\nfindById(ID id): Optional<T>\nfindAll(): List<T>\ndeleteById(ID id): void\nupdate(ID id, T entity): T" as note3
-    CrudService .. note3
-    
-    note "create(T entity): ResponseEntity<T>\ngetById(ID id): ResponseEntity<T>\ngetAll(): ResponseEntity<List<T>>\nupdate(ID id, T entity): ResponseEntity<T>\ndelete(ID id): ResponseEntity<Void>" as note4
-    CrudController .. note4
-    
-    note "nik: String\nfirstName: String\nlastName: String\nphoneNumber: String\naddress1: String\naddress2: String" as note5
-    Person .. note5
-    
-    note "-repository: PersonRepository\nsave(Person person): Person\nfindById(Long id): Optional<Person>\nfindAll(): List<Person>\ndeleteById(Long id): void\nupdate(Long id, Person person): Person" as note6
-    PersonService .. note6
-    
-    note "-personService: PersonService\ncreatePerson(Person person): ResponseEntity<Person>\ngetPersonById(Long id): ResponseEntity<Person>\ngetAllPeople(): ResponseEntity<List<Person>>\nupdatePerson(Long id, Person person): ResponseEntity<Person>\ndeletePerson(Long id): ResponseEntity<Void>" as note7
-    PersonController .. note7
 ```
